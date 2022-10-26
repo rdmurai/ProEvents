@@ -1,0 +1,168 @@
+<div class="card rounded shadow-sm">
+  <form [formGroup]="form">
+    <div class="p-3">
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label>Theme</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': f.theme.errors && f.theme.touched}"
+          formControlName="theme" placeholder="Insira o Tema">
+          <div *ngIf="f.theme.errors?.required" class="invalid-feedback">Theme Required</div>
+          <div *ngIf="f.theme.errors?.minlength" class="invalid-feedback">Minimum 4 character for Theme</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-8">
+          <label>Local</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': f.local.errors && f.local.touched}" formControlName="local" placeholder="">
+          <div *ngIf="f.local.errors?.required" class="invalid-feedback">Local Required</div>
+        </div>
+        <div class="form-group col-md-4">
+          <label>Date and Time</label>
+          <input type="datetime" class="form-control" [ngClass]="{'is-invalid': f.eventDate.errors && f.eventDate.touched}"
+          value="{{event.eventDate | DateTimeFormat}}" bsDatepicker [bsConfig]="bsConfig" formControlName="eventDate"
+          placeholder="">
+          <div class="invalid-feedback">Date and Time Required</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label>Qty</label>
+          <input type="number" class="form-control"
+          [ngClass]="{'is-invalid': f.qtyPeople.errors && f.qtyPeople.touched}"
+          formControlName="qtyPeople" placeholder="">
+          <div *ngIf="f.qtyPeople.errors?.required" class="invalid-feedback"> Qty Required</div>
+          <div *ngIf="f.qtyPeople.errors?.max" class="invalid-feedback">Maximum 120,000 people</div>
+        </div>
+        <div class="form-group col-md-2">
+          <label>Phone</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': f.phone.errors && f.phone.touched}"
+          formControlName="phone" placeholder="(000) 000-0000">
+          <div class="invalid-feedback">Phone Required</div>
+        </div>
+        <div class="form-group col-md-4">
+          <label>Email</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': f.email.errors && f.email.touched}"
+          formControlName="email" placeholder="e-mail">
+          <div class="invalid-feedback">Email Required</div>
+        </div>
+        <div class="form-group col-md-4">
+          <label>Image</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': f.imageURL.errors && f.imageURL.touched}"
+          formControlName="imageURL" placeholder="image">
+          <div class="invalid-feedback">Image Required</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="d-flex">
+        <button class="btn btn-outline-secondary mr-auto border" (click)="resetForm()">
+          Cancel
+        </button>
+        <button class="btn btn-success" [disabled]="!form.valid" (click)="saveChanges()">
+          <!-- <span class="spinner-border spinner-border-sm mr-1"></span> -->
+          Save Event
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="card rounded shadow-sm mt-4" *ngIf="!editMode">
+  <div class="p-3">
+    <div class="d-flex border-bottom">
+      <h2 class="mr-auto">
+        Event Batch
+      </h2>
+      <h2>
+        <i class="fas fa-money-bill-wave"></i>
+      </h2>
+    </div>
+
+    <div class="form-row p-1">
+      <div [formGroup]="form" class="col">
+        <div formArrayName="batches" *ngFor="let batch of batchs.controls; let i=index">
+          <fieldset [formGroupName]="i" class="form-group">
+            <legend class="d-flex justify-content-between capitalize">
+              {{returnTitleBatch(batches.get(i+'.name'))}}
+              <button (click)="deleteBatch(template, i)" class="p-2 btn btn-sm btn-outline-warning mb-1 d-flex"
+                tooltip="Delete Batch"
+                [adaptivePosition]="false"
+                [delay]="500"
+                placement="left">
+              <i class="fa fa-window-close my-1"></i>
+              <b class="ml-1 d-none d-sm-block">Delete</b>
+            </button>
+          </legend>
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label>Name</label>
+              <input
+              [ngClass]="cssValidator(batchs.get(i+'.name'))"
+              type="text" class="form-control" formControlName="name" placeholder="Batch Name">
+            </div>
+            <div class="form-group col-md-4">
+              <label>Quantity</label>
+              <input
+              [ngClass]="cssValidator(batchs.get(i+'.quantity'))"
+              type="text" class="form-control" formControlName="quantity" placeholder="000">
+            </div>
+            <div class="form-group col-md-4">
+              <label>Price</label>
+              <input
+              [ngClass]="cssValidator(batchs.get(i+'.price'))"
+              type="text" currencyMask class="form-control" formControlName="price" placeholder="$ 0.00">
+            </div>
+            <div class="form-group col-md-4">
+              <label>Initial Date</label>
+              <input
+              [ngClass]="cssValidator(batchs.get(i+'.dateStart'))"
+              type="datetime" class="form-control"
+              value="{{batchs.get(i + '.dateStart').value | date:'dd/MM/yyyy'}}"
+              bsDatepicker [bsConfig]="bsConfigBatch"
+              (bsValueChange)="changeDate($event, i, 'dateStart')"
+              formControlName="dateStart" placeholder="01/01/2019">
+            </div>
+            <div class="form-group col-md-4">
+              <label>End Date</label>
+              <input
+              [ngClass]="cssValidator(batchs.get(i+'.dateEnd'))"
+              type="datetime" class="form-control" formControlName="dateEnd" placeholder="01/01/2019"
+              value="{{batchs.get(i + '.dateEnd').value | date:'dd/MM/yyyy'}}"
+              (bsValueChange)="changeDate($event, i, 'dateEnd')"
+              bsDatepicker [bsConfig]="bsConfigBatch">
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <button (click)="addBatch()" class="d-flex btn btn-outline-primary">
+    <i class="fa fa-plus-circle my-1"></i>
+    <b class="ml-1">Batch</b>
+  </button>
+</div>
+<div class="card-footer">
+  <div class="d-flex">
+    <button class="btn btn-outline-secondary mr-auto border">
+      Cancel Changes
+    </button>
+    <button [disabled]="!form.controls.batches.valid" (click)="saveBatch()" class="btn btn-success">
+      Save Batch
+    </button>
+  </div>
+</div>
+</div>
+<br>
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Do you want remove Batch {{this.actualBatch.name}}?</p>
+    <button type="button" class="btn btn-default" (click)="confirmDeleteBatch()" >Yes</button>
+    <button type="button" class="btn btn-primary" (click)="declineDeleteBatch()" >No</button>
+  </div>
+</ng-template>

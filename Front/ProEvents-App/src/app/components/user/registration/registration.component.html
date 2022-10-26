@@ -1,0 +1,88 @@
+<div class="row mt-4">
+
+  <div class="col-md-6 d-none d-md-block" style="height: 450px;">
+    <div class="text-center col-md-12 my-auto side-heder">
+      <h1>User Register</h1>
+      <img src="../../../../assets/registerImage.png" class="my-4" alt="" width="400px">
+    </div>
+  </div>
+
+  <div class="col-md-6">
+
+    <form class="p-1"  [formGroup]="form">
+      <div class="pb-2 d-block d-md-none">
+        <h3 class="border-bottom">User Register</h3>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-sm-6">
+          <label>First Name:</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': f.firstName.errors && f.firstName.touched}"
+          formControlName="firstName" placeholder="First Name">
+          <div *ngIf="f.firstName.errors?.required" class="invalid-feedback">First Name Required</div>
+        </div>
+        <div class="form-group col-sm-6">
+          <label>Last Name:</label>
+          <input type="text" class="form-control"
+          [ngClass]="{'is-invalid': f.lastName.errors && f.lastName.touched}"
+          formControlName="lastName" placeholder="Last Name">
+          <div *ngIf="f.lastName.errors?.required" class="invalid-feedback">Last Name Required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="">Email:</label>
+        <input class="form-control" type="text"
+        [ngClass]="{'is-invalid': f.email.errors && f.email.touched}"
+        formControlName="email" placeholder="Email">
+        <div *ngIf="f.email.errors?.required" class="invalid-feedback">Email Required</div>
+      </div>
+      <div class="form-group">
+        <label for="">User:</label>
+        <input class="form-control" type="text"
+        [ngClass]="{'is-invalid': f.username.errors && f.username.touched}"
+        formControlName="username" placeholder="Username">
+        <div *ngIf="f.username.errors?.required" class="invalid-feedback">Username Required</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-sm-6">
+          <label for="">Password:</label>
+          <input class="form-control" type="password"
+          [ngClass]="{'is-invalid': f.password.errors && f.password.touched}"
+          formControlName="password" placeholder="Password">
+          <div *ngIf="f.password.errors?.required" class="invalid-feedback">Password Required</div>
+          <div *ngIf="f.password.errors?.minlength" class="invalid-feedback">Must Contains At Least 6 Characteres</div>
+
+        </div>
+        <div class="form-group col-sm-6">
+          <label for="">Repeat Password:</label>
+          <input class="form-control" type="password"
+          [ngClass]="{'is-invalid': f.confirmPassword.errors && f.confirmPassword.touched}"
+          formControlName="confirmPassword" placeholder="Confirm Password">
+          <div *ngIf="f.confirmPassword.errors?.required" class="invalid-feedback">Confirm Password Required</div>
+          <div *ngIf="f.confirmPassword.errors?.mustMatch" class="invalid-feedback">Password Doesn't Match</div>
+        </div>
+      </div>
+      <div class="form-row p-1 mb-3">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="customCheck1">
+          <label class="custom-control-label">I agree with <a href="#">Terms of Use</a>.</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-12">
+          <button class="btn btn-lg btn-success btn-block px-2">
+            Sign Up!
+          </button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-12">
+          <a class="btn btn-link btn-block" routerLink="/user/login">
+            I'm already registered
+          </a>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
